@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from mineshack.in/raja/tet44.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 18 Jun 2026 18:23:35 GMT -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>1‑Minute Predictor</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{background:#000;overflow:hidden;color:#fff}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:none;z-index:0}
+
+/* ===== FIRST BLOCK (OLD STYLE) ===== */
+#hijack{
+  position:fixed;inset:0;z-index:30000;
+  background:rgba(0,0,0,.92);
+  display:flex;align-items:center;justify-content:center
+}
+.hijackCard{
+  width:90%;max-width:340px;
+  background:#0b0b0b;border-radius:18px;
+  padding:26px;text-align:center;
+  box-shadow:0 0 50px #ff005577
+}
+.hijackLogo{
+  width:72px;height:72px;border-radius:50%;
+  margin:0 auto 12px;padding:4px;
+  background:linear-gradient(135deg,#ff0055,#00ffcc);
+  animation:pulse 2s infinite alternate
+}
+.hijackLogo img{width:100%;height:100%;border-radius:50%;background:#000}
+@keyframes pulse{
+  from{box-shadow:0 0 12px #ff005588}
+  to{box-shadow:0 0 28px #00ffccaa}
+}
+.hijackCard h2{
+  margin:0 0 10px;
+  background:linear-gradient(90deg,#ff0055,#00ffcc);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent
+}
+.hijackCard p{font-size:13px;color:#ddd;line-height:1.45}
+.warning{font-size:12px;color:#ffae00;margin-top:8px}
+.hijackCard a{
+  display:block;margin:14px 0;padding:10px;
+  border-radius:10px;
+  background:linear-gradient(90deg,#00ffcc,#ff0055);
+  color:#000;font-weight:700;text-decoration:none
+}
+.hijackCard button{
+  padding:8px 14px;border:none;border-radius:8px;
+  background:#444;color:#aaa;font-weight:700
+}
+.hijackCard button.active{
+  background:linear-gradient(90deg,#ff0055,#ffb400);
+  color:#000;cursor:pointer
+}
+
+/* ===== FAKE VERIFY ===== */
+#serverVerify{
+  position:fixed;inset:0;z-index:25000;
+  background:#000e;
+  display:none;align-items:center;justify-content:center
+}
+.serverBox{
+  width:260px;background:#0a0a0a;
+  border-radius:16px;padding:22px;
+  text-align:center;box-shadow:0 0 40px #00ffcc66
+}
+.spinner{
+  width:55px;height:55px;border-radius:50%;
+  border:4px solid #ffffff22;
+  border-top-color:#00ffcc;
+  animation:spin 1.2s linear infinite;
+  margin:0 auto 14px
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== UID ===== */
+#uidBox{
+  display:none;
+  position:fixed;top:40px;left:20px;
+  width:210px;background:#0a0a0a;
+  border-radius:12px;padding:12px;
+  z-index:20000;box-shadow:0 0 22px #ff005566
+}
+#uidBox h4{
+  font-size:13px;margin-bottom:6px;
+  background:linear-gradient(90deg,#ff0055,#00ffcc);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent
+}
+#uidBox input{
+  width:100%;padding:8px;border-radius:8px;
+  background:#050505;border:1px solid #333;color:#fff
+}
+#uidErr{font-size:11px;color:#ffaa00;margin-top:4px}
+#uidBox button{
+  width:100%;margin-top:8px;
+  padding:7px;border:none;border-radius:8px;
+  background:linear-gradient(90deg,#ff0055,#ffb400);
+  font-weight:700
+}
+
+/* ===== PREDICTOR ===== */
+#predictor{
+  display:none;
+  position:fixed;top:40px;left:20px;
+  width:210px;background:#151515;
+  border-radius:14px;overflow:hidden;
+  z-index:15000;box-shadow:0 15px 35px rgba(0,0,0,.6)
+}
+#predictorHeader{
+  background:linear-gradient(90deg,#4facfe,#8f5cff);
+  padding:8px;font-size:12px;
+  font-weight:700;text-align:center
+}
+#predictorContent{padding:10px}
+.row{display:flex;justify-content:space-between;font-size:11px;color:#ccc;margin-bottom:5px}
+.timer{color:#f1c40f;font-weight:700}
+.num{
+  width:48px;height:48px;margin:10px auto;
+  border-radius:10px;background:#0d0d0d;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:800;color:#2ecc71;
+  box-shadow:0 0 0 2px #2ecc7144
+}
+#result{text-align:center;font-size:12px;font-weight:700;margin-bottom:8px}
+.btns{display:flex;gap:6px}
+.btns button{
+  flex:1;padding:5px;border-radius:6px;
+  background:#1a1a1a;border:1px solid #333;color:#fff
+}
+.telegram{
+  margin-top:8px;padding:6px;
+  background:linear-gradient(135deg,#0088cc,#00bfff);
+  border-radius:6px;text-align:center;
+  font-size:11px;font-weight:700
+}
+
+/* FLOAT LOGO */
+#floatLogo{
+  display:none;
+  position:fixed;bottom:28px;right:20px;
+  width:54px;height:54px;border-radius:50%;
+  background:linear-gradient(135deg,#ff0055,#00ffcc);
+  padding:3px;z-index:16000;
+  animation:pulse 2s infinite alternate;
+  cursor:pointer
+}
+#floatLogo img{width:100%;height:100%;border-radius:50%;background:#000}
+</style>
+</head>
+
+<body>
+
+<iframe src="https://www.92glory88.com/#/register?invitationCode=33623925834"></iframe>
+
+<!-- BLOCK -->
+<div id="hijack">
+  <div class="hijackCard">
+    <div class="hijackLogo">
+      <img src="https://i.postimg.cc/DZm3qF0P/app-icon.jpg">
+    </div>
+    <h2>🔒 PANEL ACCESS BLOCKED</h2>
+    <p>
+      Server access lene ke liye <b>official server par register karna mandatory</b> hai.
+      <br><br>
+      Jab tak aap server se register nahi karte,
+      <b>ye predictor panel work nahi karega.</b>
+    </p>
+    <div class="warning">⚠ Server access ke bina panel unlock nahi hoga</div>
+    <a target="_blank"
+       href="https://www.92glory88.com/#/register?invitationCode=33623925834">
+       REGISTER WITH SERVER
+    </a>
+    <button id="regDone">I REGISTERED</button>
+  </div>
+</div>
+
+<!-- FAKE VERIFY -->
+<div id="serverVerify">
+  <div class="serverBox">
+    <div class="spinner"></div>
+    <div id="verifyText">Connecting to server…</div>
+  </div>
+</div>
+
+<!-- UID -->
+<div id="uidBox">
+  <h4>ENTER UID</h4>
+  <input id="uidInput" placeholder="Enter UID">
+  <div id="uidErr">Waiting for UID…</div>
+  <button onclick="verifyUID()">VERIFY</button>
+</div>
+
+<!-- PREDICTOR -->
+<div id="predictor">
+  <div id="predictorHeader">Python X Panel · @COLOURFREEHACK</div>
+  <div id="predictorContent">
+    <div class="row"><span>Period</span><span id="period">--</span></div>
+    <div class="row timer"><span>Remaining</span><span id="timer">--</span></div>
+    <div class="num" id="num">-</div>
+    <div id="result">Result: --</div>
+    <div class="btns">
+      <button onclick="hidePredictor()">HIDE</button>
+      <button onclick="predictor.remove()">EXIT</button>
+    </div>
+    <div class="telegram"
+      onclick="window.open('https://t.me','_blank')">
+      Join Telegram
+    </div>
+  </div>
+</div>
+
+<div id="floatLogo" onclick="showPredictor()">
+  <img src="https://i.postimg.cc/DZm3qF0P/app-icon.jpg">
+</div>
+
+<script>
+/* REGISTER */
+regDone.onclick=()=>{
+  hijack.style.display="none";
+  serverVerify.style.display="flex";
+  setTimeout(()=>verifyText.innerText="Verifying account…",1500);
+  setTimeout(()=>verifyText.innerText="Syncing permission…",3000);
+  setTimeout(()=>{
+    serverVerify.style.display="none";
+    uidBox.style.display="block";
+  },4500);
+};
+
+/* UID */
+function verifyUID(){
+  uidErr.textContent="Verifying UID…";
+  setTimeout(()=>{
+    uidErr.textContent="✔ UID Verified";
+    setTimeout(()=>{
+      uidBox.style.display="none";
+      predictor.style.display="block";
+    },600);
+  },1800);
+}
+
+/* HIDE / SHOW */
+function hidePredictor(){
+  predictor.style.display="none";
+  floatLogo.style.display="block";
+}
+function showPredictor(){
+  predictor.style.display="block";
+  floatLogo.style.display="none";
+}
+
+/* ===== PERIOD + 30s ANALYZE LOGIC ===== */
+let lastPeriod = "";
+let waiting = false;
+
+function tick(){
+  const now = new Date();
+
+  /* TIMER */
+  const rs = 60 - now.getUTCSeconds();
+  timer.textContent = rs + "s";
+
+  /* PERIOD */
+  const mins = now.getUTCHours()*60 + now.getUTCMinutes();
+  const dateStr = now.toISOString().slice(0,10).replace(/-/g,"");
+  const periodFull = dateStr + "1000" + (10001 + mins);
+  period.textContent = periodFull.slice(-5);
+
+  /* NEW PERIOD */
+  if(periodFull !== lastPeriod){
+    lastPeriod = periodFull;
+    waiting = true;
+
+    num.textContent = "...";
+    result.textContent = "Analyzing...";
+    result.style.color = "#f1c40f";
+
+    setTimeout(()=>{
+      const n = Math.floor(Math.random()*10);
+      num.textContent = n;
+      result.textContent = "Result: " + (n <= 4 ? "SMALL" : "BIG");
+      result.style.color = n <= 4 ? "#e74c3c" : "#2ecc71";
+      waiting = false;
+    }, 30000); // ✅ 30 SECONDS
+  }
+}
+
+/* START */
+setInterval(tick,1000);
+tick();
+</script>
+
+
+</body>
+
+<!-- Mirrored from mineshack.in/raja/tet44.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 18 Jun 2026 18:23:59 GMT -->
+</html>
